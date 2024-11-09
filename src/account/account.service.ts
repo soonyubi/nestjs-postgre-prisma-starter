@@ -1,13 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/common/prisma.service';
+import { CreateAccountDto } from './payload/create-account.payload';
 
 @Injectable()
 export class AccountService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createAccount(data: Prisma.AccountCreateInput) {
-    return await this.prisma.account.create({ data });
+  async createAccount(data: CreateAccountDto) {
+    return await this.prisma.account.create({
+      data: CreateAccountDto.toEntity(data),
+    });
   }
 
   async getAccountById(id: number) {

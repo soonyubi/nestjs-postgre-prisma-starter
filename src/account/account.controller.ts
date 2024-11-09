@@ -9,13 +9,14 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { AccountService } from './account.service';
+import { CreateAccountDto } from './payload/create-account.payload';
 
 @Controller('account')
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
   @Post()
-  create(@Body() data: Prisma.AccountCreateInput) {
+  create(@Body() data: CreateAccountDto) {
     return this.accountService.createAccount(data);
   }
 
