@@ -26,7 +26,7 @@ jobs:
           NCP_ACCESS_KEY_ID: ${{ secrets.NCP_REGISTRY_ACCESS_KEY }}
           NCP_SECRET_ACCESS_KEY: ${{ secrets.NCP_REGISTRY_SECRET_KEY }}
         run: |
-          echo "$NCP_ACCESS_KEY_ID" | docker login -u "$NCP_ACCESS_KEY_ID" --password-stdin nestjs-app-registry.kr.ncr.ntruss.com
+          echo "${{ secrets.NCP_SECRET_ACCESS_KEY }}" | docker login -u "${{ secrets.NCP_ACCESS_KEY_ID }}" --password-stdin nestjs-app-registry.kr.ncr.ntruss.com
 
       - name: Build Docker image
         run: |
