@@ -1,0 +1,39 @@
+name: Docker Build and Push to Naver Cloud
+
+on:
+  push:
+    branches:
+      - main # 필요한 브랜치를 설정하세요.
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker tags
+        id: vars
+        run: |
+          SHORT_SHA=${GITHUB_SHA::8}
+          BRANCH=$(echo ${GITHUB_REF#refs/heads/} | tr '/' '-')
+          echo "TAG=${BRANCH}-${SHORT_SHA}" >> $GITHUB_ENV
+          echo "LATEST_TAG=${BRANCH}-latest" >> $GITHUB_ENV
+
+      - name: Log in to Naver Cloud Container Registry
+        env:
+          NCP_ACCESS_KEY_ID: ${{ secrets.NCP_REGISTRY_ACCESS_KEY }}
+          NCP_SECRET_ACCESS_KEY: ${{ secrets.NCP_REGISTRY_SECRET_KEY }}
+        run: |
+          echo "$NCP_ACCESS_KEY_ID" | docker login -u "$NCP_ACCESS_KEY_ID" --password-stdin nestjs-app-registry.kr.ncr.ntruss.com
+
+      - name: Build Docker image
+        run: |
+          docker build -t nestjs-app-registry.kr.ncr.ntruss.com/sample/nestjs-app:${{ env.TAG }} .
+          docker tag nestjs-app-registry.kr.ncr.ntruss.com/sample/nestjs-app:${{ env.TAG }} nestjs-app-registry.kr.ncr.ntruss.com/sample/nestjs-app:${{ env.LATEST_TAG }}
+
+      - name: Push Docker image to Naver Cloud
+        run: |
+          docker push nestjs-app-registry.kr.ncr.ntruss.com/sample/nestjs-app:${{ env.TAG }}
+          docker push nestjs-app-registry.kr.ncr.ntruss.com/sample/nestjs-app:${{ env.LATEST_TAG }}
