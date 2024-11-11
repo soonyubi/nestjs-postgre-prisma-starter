@@ -3,8 +3,8 @@ name: Docker Build and Push to Naver Cloud
 on:
   push:
     branches:
-      - main # 필요한 브랜치를 설정하세요.
-      - dev # 추가적인 브랜치를 설정할 수 있습니다.
+      - main
+      - dev
 
 jobs:
   build-and-push:
@@ -27,8 +27,6 @@ jobs:
           NCP_REGISTRY_ACCESS_KEY: ${{ secrets.NCP_REGISTRY_ACCESS_KEY }}
           NCP_REGISTRY_SECRET_KEY: ${{ secrets.NCP_REGISTRY_SECRET_KEY }}
         run: |
-          echo "${{ secrets.NCP_REGISTRY_ACCESS_KEY }}"
-          echo "${{ secrets.NCP_REGISTRY_SECRET_KEY }}"
           echo "${{ secrets.NCP_REGISTRY_SECRET_KEY }}" | docker login -u "${{ secrets.NCP_REGISTRY_ACCESS_KEY }}" --password-stdin nestjs-app-registry.kr.ncr.ntruss.com
 
       - name: Build Docker image
@@ -40,3 +38,6 @@ jobs:
         run: |
           docker push nestjs-app-registry.kr.ncr.ntruss.com/sample/nestjs-app:${{ env.TAG }}
           docker push nestjs-app-registry.kr.ncr.ntruss.com/sample/nestjs-app:${{ env.LATEST_TAG }}
+
+      - name: Log out from Naver Cloud Container Registry
+        run: docker logout nestjs-app-registry.kr.ncr.ntruss.com

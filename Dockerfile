@@ -15,10 +15,6 @@ COPY . .
 # 런타임에 DATABASE_URL을 주입할 수 있도록 설정
 ENV DATABASE_URL="postgresql://shy1234:soon7832!@pg-2vnmvd.vpc-cdb-kr.ntruss.com:5432/test"
 
-# 6. Prisma Client 생성 및 마이그레이션
-# Prisma Client를 생성하고 데이터베이스 마이그레이션을 수행
-RUN npx prisma generate
-RUN npx prisma migrate deploy
 
 # 7. NestJS 앱 빌드
 RUN npm run build
