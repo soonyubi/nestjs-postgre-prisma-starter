@@ -20,4 +20,4 @@ ENV DATABASE_URL="postgresql://shy1234:soon7832!@pg-2vnmvd.vpc-cdb-kr.ntruss.com
 RUN npm run build
 
 # 8. 애플리케이션 시작 명령
-CMD ["npm", "run", "start:prod"]
+CMD npx prisma migrate deploy && npm run start:prod
