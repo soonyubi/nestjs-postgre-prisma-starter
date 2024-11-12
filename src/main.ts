@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
+import './opentelemetry-setup'; // OpenTelemetry 초기화
+import logger from './common/logger/winston-logger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -14,6 +15,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
+  app.useLogger(logger);
   SwaggerModule.setup('api-docs', app, document);
 
   await app.listen(3000);
